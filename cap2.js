@@ -25,11 +25,11 @@ let count2 = 1;
 console.log('================= QUESTÃO 2 =====================');
 
 while (count2 <= 100) {
-  if (count2 % 3 === 0 && count2 % 5 === 0) {
+  if (count2 % 3 == 0 && count2 % 5 == 0) {
     console.log('BuzzFizz');
-  } else if (count2 % 5 === 0) {
+  } else if (count2 % 5 == 0) {
     console.log('Buzz');
-  } else if (count2 % 3 === 0) {
+  } else if (count2 % 3 == 0) {
     console.log('Fizz');
   } else {
     console.log(count2);
