@@ -52,3 +52,33 @@ Passing this string to console.log should show something like this:
  # # # #
 # # # #
 When you have a program that generates this pattern, define a binding size = 8 and change the program so that it works for any size, outputting a grid of the given width and height. */
+
+console.log('================= QUESTÃO 3 =====================');
+
+/* for (let a = 0; a < 8; a++) {
+  for (let b = 0; b < 8; b++) {
+    if ((a + b) % 2 === 0) {
+      console.log(' ');
+    } else {
+      console.log('#');
+    }
+  }
+  console.log('\n');
+} */
+
+let size = 8;
+
+let board = '';
+
+for (let y = 0; y < size; y++) {
+  for (let x = 0; x < size; x++) {
+    if ((x + y) % 2 == 0) {
+      board += ' ';
+    } else {
+      board += '#';
+    }
+  }
+  board += '\n';
+}
+
+console.log(board);
