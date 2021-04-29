@@ -57,3 +57,15 @@ how many uppercase “B” characters there are in the string.
 Next, write a function called countChar that behaves like countBs, except it takes a second argument 
 that indicates the character that is to be counted (rather than counting only uppercase “B” characters). 
 Rewrite countBs to make use of this new function. */
+
+console.log('================= QUESTÃO 3 =====================');
+
+function countChars(letters, char) {  
+  let sumn = 0;
+  for(let a = 0; a < letters.length; a++) {
+    letters[a] == char && sumn++;
+  }
+  return sumn; 
+}
+
+console.log(countChars('BernBadoB', 'e'));
