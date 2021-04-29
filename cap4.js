@@ -16,19 +16,18 @@ console.log("================= QUESTÃO 1 =====================");
 
 function range(a, b, step = a < b ? 1 : -1) {
   const array = [];
-  
-  if(step > 0) {
-    for(let ind = a; ind <= b; ind += step) {
+
+  if (step > 0) {
+    for (let ind = a; ind <= b; ind += step) {
       array.push(ind);
     }
   } else {
-    for(let ind = a; ind >= b; ind += step) {
+    for (let ind = a; ind >= b; ind += step) {
       array.push(ind);
     }
   }
-  return array
+  return array;
 }
-
 
 function sum(array) {
   return array.reduce((accum, curr) => accum + curr);
@@ -47,31 +46,32 @@ Thinking back to the notes about side effects and pure functions in the previous
 which variant do you expect to be useful in more situations? Which one runs faster?
  */
 
-console.log('================= QUESTÃO 2 =====================');
+console.log("================= QUESTÃO 2 =====================");
 function reverseArray(array) {
   const newArray = [];
-  for(let a = array.length - 1; a >= 0; a--) {
+  for (let a = array.length - 1; a >= 0; a--) {
     newArray.push(array[a]);
   }
   return newArray;
 }
 
-console.log(reverseArray(['1', '2', '3', '4', '5']));
+console.log(reverseArray(["1", "2", "3", "4", "5"]));
 
 function reverseArrayInPlace(array) {
-  for(let a = 0 ; a <= ~~(array.length/2); a++) {
+  for (let a = 0; a <= ~~(array.length / 2); a++) {
     let save = array[a];
-    array[a] = array[array.length -1 - a];
-    array[array.length -1 - a] = save;    
+    array[a] = array[array.length - 1 - a];
+    array[array.length - 1 - a] = save;
   }
-  return array  
+  return array;
 }
 
-console.log(reverseArrayInPlace(['1', '2', '3', '4', '5', '6']));
+console.log(reverseArrayInPlace(["1", "2", "3", "4", "5", "6"]));
 
 /*
 3 - A list
-Objects, as generic blobs of values, can be used to build all sorts of data structures. A common data structure is the list (not to be confused with array). A list is a nested set of objects, with the first object holding a reference to the second, the second to the third, and so on.
+Objects, as generic blobs of values, can be used to build all sorts of data structures. A common data structure is the list (not to be confused with array). 
+A list is a nested set of objects, with the first object holding a reference to the second, the second to the third, and so on.
 
 let list = {
   value: 1,
@@ -94,12 +94,52 @@ The resulting objects form a chain, like this:
                                                   | rest: null  |
                                                   ---------------     
 A linked list
-A nice thing about lists is that they can share parts of their structure. For example, if I create two new values {value: 0, rest: list} and {value: -1, rest: list} (with list referring to the binding defined earlier), they are both independent lists, but they share the structure that makes up their last three elements. The original list is also still a valid three-element list.
+A nice thing about lists is that they can share parts of their structure. For example, if I create two new values {value: 0, rest: list} and {value: -1, rest: list} 
+(with list referring to the binding defined earlier), they are both independent lists, but they share the structure that makes up their last three elements. 
+The original list is also still a valid three-element list.
 
-Write a function arrayToList that builds up a list structure like the one shown when given [1, 2, 3] as argument. Also write a listToArray function that produces an array from a list. Then add a helper function prepend, which takes an element and a list and creates a new list that adds the element to the front of the input list, and nth, which takes a list and a number and returns the element at the given position in the list (with zero referring to the first element) or undefined when there is no such element.
+Write a function arrayToList that builds up a list structure like the one shown when given [1, 2, 3] as argument. Also write a listToArray 
+function that produces an array from a list. Then add a helper function prepend, which takes an element and a list and creates a new list that adds 
+the element to the front of the input list, and nth, which takes a list and a number and returns the element at the given position in the list 
+(with zero referring to the first element) or undefined when there is no such element.
 
 If you haven’t already, also write a recursive version of nth.
 */
+console.log("================= QUESTÃO 3 =====================");
+
+function arrayToList(array) {
+  let list = null;
+  for (let i = array.length - 1; i >= 0; i--) {
+    list = { value: array[i], rest: list };
+  }
+  return list;
+}
+
+console.log(arrayToList(["10", "20"]));
+
+function listToArray(list) {
+  let array = [];
+  for (let node = list; node; node = node.rest) {
+    array.push(node.value);
+  }
+  return array;
+}
+
+console.log(listToArray(arrayToList(["10", "20"])));
+
+function prepend(value, list) {
+  return { value, rest: list };
+}
+
+console.log(prepend(10, prepend(20, null)));
+
+function nth(list, n) {
+  if (!list) return undefined;
+  else if (n == 0) return list.value;
+  else return nth(list.rest, n - 1);
+}
+
+console.log(nth(arrayToList([10, 20, 30]), 2));
 
 /*
 4 - Deep comparison
@@ -114,3 +154,30 @@ But you have to take one silly exception into account: because of a historical a
 
 The Object.keys function will be useful when you need to go over the properties of objects to compare them.
 */
+
+console.log("================= QUESTÃO 4 =====================");
+
+function deepEqual(a, b) {
+  if (a === b) return true;
+  if (a == null || typeof a != "object" || b == null || typeof b != "object")
+    return false;
+
+  let keysA = Object.keys(a),
+    keysB = Object.keys(b);
+
+  if (keysA.length != keysB.length) return false;
+
+  for (let key of keysA) {
+    if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
+  }
+
+  return true;
+}
+
+let obj = {
+  name: 'lucas',
+  job: 'programmer',
+  age: 26,
+}
+
+console.log(deepEqual(obj, {...obj, sport: 'Basketball'}));
