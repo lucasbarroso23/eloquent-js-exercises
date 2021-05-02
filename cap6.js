@@ -10,6 +10,34 @@ Add a getter property length to the prototype that computes the length of the ve
 the distance of the point (x, y) from the origin (0, 0). 
 */
 
+console.log("================= QUESTÃO 1 =====================");
+
+class Vector {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  plus(vector) {
+    return new Vector(this.x + vector.x, this.y + vector.y);
+  }
+
+  minus(vector) {
+    return new Vector(this.x - vector.x, this.y - vector.y);
+  }
+
+  get length() {
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+  }
+}
+
+console.log(new Vector(5, 6).plus(new Vector(2, 3)));
+// → Vector{x: 3, y: 5}
+console.log(new Vector(8, 4).minus(new Vector(2, 3)));
+// → Vector{x: -1, y: -1}
+console.log(new Vector(3, 4).length);
+// → 5
+
 /* 
 2 - Groups
 The standard JavaScript environment provides another data structure called Set. Like an instance of Map, 
