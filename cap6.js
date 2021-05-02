@@ -32,11 +32,8 @@ class Vector {
 }
 
 console.log(new Vector(5, 6).plus(new Vector(2, 3)));
-// → Vector{x: 3, y: 5}
 console.log(new Vector(8, 4).minus(new Vector(2, 3)));
-// → Vector{x: -1, y: -1}
 console.log(new Vector(3, 4).length);
-// → 5
 
 /* 
 2 - Groups
@@ -54,6 +51,42 @@ Use the === operator, or something equivalent such as indexOf, to determine whet
 Give the class a static from method that takes an iterable object as argument and creates a group that contains all 
 the values produced by iterating over it.
  */
+
+console.log("================= QUESTÃO 2 =====================");
+
+class Group {
+  constructor() {
+    this.group = [];
+  }
+
+  add(value) {
+    if (!this.has(value)) this.group.push(value);
+  }
+
+  delete(value) {
+    this.group = this.group.filter((v) => v !== value);
+  }
+
+  has(value) {
+    return this.group.includes(value);
+  }
+
+  static from(iter) {
+    let group = new Group();
+    for (let value of iter) {
+      group.add(value);
+    }
+
+    return group;
+  }
+}
+
+let group = Group.from([10, 20]);
+console.log(group.has(10));
+console.log(group.has(30));
+group.add(10);
+group.delete(10);
+console.log(group.has(10));
 
 /* 
 3 - Iterable groups
