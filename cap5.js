@@ -83,6 +83,9 @@ Remember that each script object has a direction property that can be "ltr" (lef
 The dominant direction is the direction of a majority of the characters that have a script associated with them. 
 The characterScript and countBy functions defined earlier in the chapter are probably useful here. 
 */
+
+console.log("================= QUESTÃO 4 =====================");
+
 var SCRIPTS = [
   {
     name: "Adlam",

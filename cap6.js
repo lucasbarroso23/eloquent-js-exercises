@@ -99,6 +99,66 @@ the Symbol.iterator method on the array. That would work, but it defeats the pur
 It is okay if your iterator behaves strangely when the group is modified during iteration.
  */
 
+console.log("================= QUESTÃO 3 =====================");
+class Group2 {
+  constructor() {
+    this.group = [];
+  }
+
+  add(value) {
+    if (!this.has(value)) this.group.push(value);
+  }
+
+  delete(value) {
+    this.group = this.group.filter((v) => v !== value);
+  }
+
+  has(value) {
+    return this.group.includes(value);
+  }
+
+  next() {
+    if (this.index === this.group.length) return { done: true };
+
+    this.index++;
+    return { value: this.group[index], done: false };
+  }
+
+  static from(iter) {
+    let group = new Group2();
+    for (let value of iter) {
+      group.add(value);
+    }
+
+    return group;
+  }
+
+  [Symbol.iterator]() {
+    return new GroupIterator(this);
+  }
+}
+
+class GroupIterator {
+  constructor(group) {
+    this.group = group;
+    this.position = 0;
+  }
+
+  next() {
+    if (this.position >= this.group.group.length) {
+      return { done: true };
+    } else {
+      let result = { value: this.group.group[this.position], done: false };
+      this.position++;
+      return result;
+    }
+  }
+}
+
+for (let value of Group2.from(["a", "b", "c"])) {
+  console.log(value);
+}
+
 /* 
 4 - Borrowing a method
 Earlier in the chapter I mentioned that an object’s hasOwnProperty can be used as a more robust alternative 
@@ -107,3 +167,10 @@ the word "hasOwnProperty"? You won’t be able to call that method anymore becau
 
 Can you think of a way to call hasOwnProperty on an object that has its own property by that name?
  */
+
+console.log("================= QUESTÃO 4 =====================");
+
+let map = { one: true, two: true, hasOwnProperty: true };
+
+console.log(Object.prototype.hasOwnProperty.call(map, "one"));
+// → true
