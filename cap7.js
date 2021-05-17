@@ -1,3 +1,20 @@
+const roads = [
+  "Alice's House-Bob's House",
+  "Alice's House-Cabin",
+  "Alice's House-Post Office",
+  "Bob's House-Town Hall",
+  "Daria's House-Ernie's House",
+  "Daria's House-Town Hall",
+  "Ernie's House-Grete's House",
+  "Grete's House-Farm",
+  "Grete's House-Shop",
+  "Marketplace-Farm",
+  "Marketplace-Post Office",
+  "Marketplace-Shop",
+  "Marketplace-Town Hall",
+  "Shop-Town Hall",
+];
+
 /* 
 1 - Measuring a robot
 It’s hard to objectively compare robots by just letting them solve a few scenarios. 
@@ -15,7 +32,7 @@ rather than generating different tasks per robot.
 console.log("================= QUESTÃO 1 =====================");
 
 function countSteps(state, robot, memory) {
-  for (let steps = 0;; steps++) {
+  for (let steps = 0; ; steps++) {
     if (state.parcels.length == 0) return steps;
     let action = robot(state, memory);
     state = state.move(action.direction);
@@ -24,14 +41,15 @@ function countSteps(state, robot, memory) {
 }
 
 function compareRobots(robot1, memory1, robot2, memory2) {
-  let total1 = 0, total2 = 0;
+  let total1 = 0,
+    total2 = 0;
   for (let i = 0; i < 100; i++) {
     let state = VillageState.random();
     total1 += countSteps(state, robot1, memory1);
     total2 += countSteps(state, robot2, memory2);
   }
-  console.log(`Robot 1 needed ${total1 / 100} steps per task`)
-  console.log(`Robot 2 needed ${total2 / 100}`)
+  console.log(`Robot 1 needed ${total1 / 100} steps per task`);
+  console.log(`Robot 2 needed ${total2 / 100}`);
 }
 
 compareRobots(routeRobot, [], goalOrientedRobot, []);
@@ -44,6 +62,39 @@ If you observe that robot’s behavior, what obviously stupid things does it do?
 If you solved the previous exercise, you might want to use your compareRobots function to verify 
 whether you improved the robot.
  */
+
+console.log("================= QUESTÃO 2 =====================");
+
+function lazyRobot({ place, parcels }, route) {
+  if (route.length == 0) {
+    // Describe a route for every parcel
+    let routes = parcels.map((parcel) => {
+      if (parcel.place != place) {
+        return {
+          route: findRoute(roadGraph, place, parcel.place),
+          pickUp: true,
+        };
+      } else {
+        return {
+          route: findRoute(roadGraph, place, parcel.address),
+          pickUp: false,
+        };
+      }
+    });
+
+    // This determines the precedence a route gets when choosing.
+    // Route length counts negatively, routes that pick up a package
+    // get a small bonus.
+    function score({ route, pickUp }) {
+      return (pickUp ? 0.5 : 0) - route.length;
+    }
+    route = routes.reduce((a, b) => (score(a) > score(b) ? a : b)).route;
+  }
+
+  return { direction: route[0], memory: route.slice(1) };
+}
+
+runRobotAnimation(VillageState.random(), lazyRobot, []);
 
 /* 
 3 - Persistent group
@@ -65,3 +116,38 @@ Instead, there is an empty instance, PGroup.empty, that can be used as a startin
 
 Why do you need only one PGroup.empty value, rather than having a function that creates a new, empty map every time?
  */
+
+console.log("================= QUESTÃO 3 =====================");
+
+class PGroup {
+  constructor(members) {
+    this.members = members;
+  }
+
+  add(value) {
+    if (this.has(value)) return this;
+    return new PGroup(this.members.concat([value]));
+  }
+
+  delete(value) {
+    if (!this.has(value)) return this;
+    return new PGroup(this.members.filter((m) => m !== value));
+  }
+
+  has(value) {
+    return this.members.includes(value);
+  }
+}
+
+PGroup.empty = new PGroup([]);
+
+let a = PGroup.empty.add("a");
+let ab = a.add("b");
+let b = ab.delete("a");
+
+console.log(b.has("b"));
+// → true
+console.log(a.has("b"));
+// → false
+console.log(b.has("a"));
+// → false
