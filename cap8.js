@@ -53,29 +53,53 @@ Directly accessing the private _content property is forbidden.
 
 Write a function called withBoxUnlocked that takes a function value as argument, 
 unlocks the box, runs the function, and then ensures that the box is locked again 
-before returning, regardless of whether the argument function returned normally or threw an exception.
+before returning, regardless of whether the argument function returned normally or 
+threw an exception.
+
+
+For extra points, make sure that if you call withBoxUnlocked when the 
+box is already unlocked, the box stays unlocked.
+
+
+*/
+
+console.log("================= QUESTÃO 2 =====================");
 
 const box = {
   locked: true,
-  unlock() { this.locked = false; },
-  lock() { this.locked = true;  },
+  unlock() {
+    this.locked = false;
+  },
+  lock() {
+    this.locked = true;
+  },
   _content: [],
   get content() {
     if (this.locked) throw new Error("Locked!");
     return this._content;
-  }
+  },
 };
 
 function withBoxUnlocked(body) {
-  // Your code here.
+  let locked = box.locked;
+  if (!locked) {
+    return body;
+  }
+
+  box.unlock();
+  try {
+    return body;
+  } finally {
+    box.lock();
+  }
 }
 
-withBoxUnlocked(function() {
+withBoxUnlocked(function () {
   box.content.push("gold piece");
 });
 
 try {
-  withBoxUnlocked(function() {
+  withBoxUnlocked(function () {
     throw new Error("Pirates on the horizon! Abort!");
   });
 } catch (e) {
@@ -83,7 +107,3 @@ try {
 }
 console.log(box.locked);
 // → true
-For extra points, make sure that if you call withBoxUnlocked when the box is already unlocked, the box stays unlocked.
-
-
-*/
